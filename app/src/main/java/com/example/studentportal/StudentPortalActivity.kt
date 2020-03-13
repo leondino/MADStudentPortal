@@ -1,5 +1,7 @@
 package com.example.studentportal
 
+import android.app.Activity
+import android.content.Intent
 import android.os.Bundle
 import com.google.android.material.snackbar.Snackbar
 import androidx.appcompat.app.AppCompatActivity
@@ -12,6 +14,8 @@ import kotlinx.android.synthetic.main.activity_student_portal.*
 import kotlinx.android.synthetic.main.content_student_portal.*
 import kotlinx.android.synthetic.main.item_portal.view.*
 
+const val ADD_PORTAL_REQUEST_CODE = 100
+
 class StudentPortalActivity : AppCompatActivity() {
 
     private var portals = arrayListOf<Portal>()
@@ -22,23 +26,36 @@ class StudentPortalActivity : AppCompatActivity() {
         setContentView(R.layout.activity_student_portal)
         setSupportActionBar(toolbar)
 
-        initView()
+        initViews()
 
-        fab.setOnClickListener { view ->
-            Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                .setAction("Action", null).show()
+        fab.setOnClickListener {
+            startAddActivity()
         }
     }
 
-    private fun initView(){
+    private fun initViews(){
         rvPortals.layoutManager = GridLayoutManager(this, 2, GridLayoutManager.VERTICAL, false)
         rvPortals.adapter = portalAdapter
 
-        //test
-        portals.add(Portal("serebii","https://serebii.net/"))
-        portals.add(Portal("android level 3 task 2", "https://www.android-development.app/level-3-multi-screen-app/level3-task2"))
-
         portalAdapter.notifyDataSetChanged()
+    }
+
+    private fun startAddActivity(){
+        val intent = Intent(this, AddPortalActivity::class.java)
+        startActivityForResult(intent, ADD_PORTAL_REQUEST_CODE)
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (resultCode == Activity.RESULT_OK){
+            when (requestCode){
+                ADD_PORTAL_REQUEST_CODE -> {
+                    val portal = data!!.getParcelableExtra<Portal>(EXTRA_PORTAL)
+                    portals.add(portal)
+                    portalAdapter.notifyDataSetChanged()
+                }
+            }
+        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {

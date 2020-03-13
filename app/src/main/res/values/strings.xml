@@ -6,4 +6,6 @@
     <string name="title">Title</string>
     <string name="url">Url</string>
     <string name="http">https://</string>
+    <string name="empty_textfield_error">Either Title or Url is still empty!</string>
+    <string name="add_title">Create a Portal</string>
 </resources>
